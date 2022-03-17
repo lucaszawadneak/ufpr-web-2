@@ -20,7 +20,7 @@ import java.util.List;
 public class UsuarioDAO implements DAO<Usuario>{
     private static final String INSERT_QUERY = "INSERT INTO usuario (nome,login,senha) values (?,?,?)";
     private static final String FIND_ALL_QUERY = "SELECT * from usuario;";
-    private static final String FIND_ONE = "SELECT * FROM usuario WHERE id = ?";
+    private static final String FIND_ONE = "SELECT * FROM usuario WHERE login = ?";
     private static final String UPDATE = "UPDATE user SET name = ?, login = ?, senha = ? WHERE id = ?";
     private static final String DELETE = "DELETE FROM user WHERE id = ?";
     private Connection con = null;
@@ -34,8 +34,9 @@ public class UsuarioDAO implements DAO<Usuario>{
     
 
     @Override
-    public Usuario find(long id) throws DAOException {
+    public Usuario find(String login) throws DAOException {
         try(PreparedStatement ps = con.prepareStatement(FIND_ONE)){
+            ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Usuario u = new Usuario();

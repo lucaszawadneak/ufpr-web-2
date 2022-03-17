@@ -13,9 +13,9 @@ import java.sql.DriverManager;
  */
 public class ConnectionFactory implements AutoCloseable {
     private static String DRIVER = "org.postgresql.Driver";
-    private static String URL = "jdbc://postgresql://localhost:5432/java";
+    private static String URL = "jdbc:postgresql://localhost:5432/java";
     private static String LOGIN = "postgres";
-    private static String PASSWORD = "docker";
+    private static String PASSWORD = "postgres";
     
     private Connection con = null;
     

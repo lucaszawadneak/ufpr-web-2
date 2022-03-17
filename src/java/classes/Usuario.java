@@ -18,6 +18,12 @@ public class Usuario implements Serializable {
     String senha;
     Integer id;
 
+    public Usuario(String name, String login, String password) {
+        this.nome = nome;
+        this.login = login;
+        this.senha = senha;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -6,6 +6,9 @@
 package servlets;
 
 import classes.Usuario;
+import connection.ConnectionFactory;
+import dao.UsuarioDAO;
+import exception.DAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,34 +16,35 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpSession;
 /*
 * @author laboratorio
 */
 @WebServlet(name = "CadastrarUsuarioServlet", urlPatterns = {"/CadastrarUsuarioServlet"})
 public class CadastrarUsuarioServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/PortalServlet");
+        RequestDispatcher portalRD = getServletContext().getRequestDispatcher("/PortalServlet");
         
-            
+        HttpSession session = request.getSession();
+        RequestDispatcher erroRD = getServletContext().getRequestDispatcher("/erro.jsp");
+        if(session == null){
+            request.setAttribute("msg", "Usuário não logado");
+            request.setAttribute("page", "index.html");
+            erroRD.forward(request, response);
+        }
+    
+        
         String name = request.getParameter("name");
         String login = request.getParameter("login");
         String password = request.getParameter("password");
             
         Usuario newUser = new Usuario(name,login,password);
+        
+        insertUser(newUser);
            
             
         try (PrintWriter out = response.getWriter()) {
@@ -52,18 +56,27 @@ public class CadastrarUsuarioServlet extends HttpServlet {
             out.println("<title>Cadastro de usuário</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<script>alert(\"Usuário cadastrado com sucesso\")</script>");
+            out.println("<h1>Usuário cadastrado com sucesso!</h1><a href=portal.jsp>Portal</a>");
             out.println("</body>");
             out.println("</html>");
         }
     }
     
-    private void returnToPortal(HttpServletRequest req, HttpServletResponse res, RequestDispatcher rd,Usuario user) throws ServletException, IOException{
-        req.setAttribute("user", user);
-        rd.forward(req, res);
-           
+    private void insertUser(Usuario user){
+        try(ConnectionFactory factory = new ConnectionFactory()){
+            UsuarioDAO u = new UsuarioDAO(factory.getConnection());
+            
+            u.insert(user);
+        } catch (DAOException e){
+            System.out.println("Erro ao buscar usuario");
+            e.printStackTrace();
+        } catch (Exception e){
+            System.out.println("erro");
+            e.printStackTrace();
+        }
         
     }
+    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

@@ -12,7 +12,7 @@ import java.util.List;
  * @author lucas
  */
 public interface DAO<T> {
-    T find (long id) throws DAOException;
+    T find (String identifier) throws DAOException;
     List<T> findAll() throws DAOException;
     void insert(T t) throws DAOException;
     void update(T t) throws DAOException;

@@ -5,6 +5,11 @@
  */
 package servlets;
 
+import classes.LoginBean;
+import classes.Usuario;
+import connection.ConnectionFactory;
+import dao.UsuarioDAO;
+import exception.DAOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +27,7 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "LoginServlet", urlPatterns = {"/LoginServlet"})
 public class LoginServlet extends HttpServlet {
+    private Usuario usuario = null;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,7 +43,7 @@ public class LoginServlet extends HttpServlet {
         
         response.setContentType("text/html;charset=UTF-8");
         
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/ErroServlet");
+        RequestDispatcher rd = getServletContext().getRequestDispatcher("/erro.jsp");
         
         String user = request.getParameter("user");
         String password = request.getParameter("password");
@@ -45,7 +51,12 @@ public class LoginServlet extends HttpServlet {
         
         if(handleLogin(user,password)){
             HttpSession s = request.getSession();
-            s.setAttribute("logado",user);
+            LoginBean lb = new LoginBean();
+            
+            lb.setId(usuario.getId());
+            lb.setName(usuario.getNome());
+            
+            s.setAttribute("logado",lb);
             response.sendRedirect("PortalServlet");
         } else {
             request.setAttribute("msg", "Erro ao logar! Verifique sua senha");
@@ -76,7 +87,23 @@ public class LoginServlet extends HttpServlet {
     }
     
     private Boolean handleLogin(String email,String password){
-        return email.equals(password);
+        try(ConnectionFactory factory = new ConnectionFactory()){
+            UsuarioDAO u = new UsuarioDAO(factory.getConnection());
+            Usuario user = u.find(email);
+            
+            if(password.equals(user.getSenha())){
+                usuario = user;
+                return true;
+            }
+        } catch (DAOException e){
+            System.out.println("Erro ao buscar usuario");
+            e.printStackTrace();
+        } catch (Exception e){
+            System.out.println("erro");
+            e.printStackTrace();
+        }
+        
+        return false;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
