@@ -42,14 +42,14 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         
         response.setContentType("text/html;charset=UTF-8");
-        
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/erro.jsp");
+       
         
         String user = request.getParameter("user");
         String password = request.getParameter("password");
         
         
         if(handleLogin(user,password)){
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/portal.jsp");
             HttpSession s = request.getSession();
             LoginBean lb = new LoginBean();
             
@@ -57,10 +57,12 @@ public class LoginServlet extends HttpServlet {
             lb.setName(usuario.getNome());
             
             s.setAttribute("logado",lb);
-            response.sendRedirect("PortalServlet");
+            request.setAttribute("name", usuario.getNome());
+            rd.forward(request,response);
         } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
             request.setAttribute("msg", "Erro ao logar! Verifique sua senha");
-            request.setAttribute("page", "/index.html");
+            request.setAttribute("page", "/index.jsp");
             rd.forward(request, response);
         }
         

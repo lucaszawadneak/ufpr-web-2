@@ -11,10 +11,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Erro</title>
+        
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     </head>
     <body>
-        <h1><%=request.getParameter("msg")%></h1>
-        <a href=<%=request.getParameter("page")%>>Sair</a>
+        <h1>${msg}</h1>
+        <a href="/WEB1/${page}">Sair</a>
         <footer>
             <p>Em caso de problemas contactar o adminstrador: <%
                out.print(((ConfigBean) application.getAttribute("configuracao")).getAdminEmail());

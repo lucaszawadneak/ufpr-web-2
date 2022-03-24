@@ -47,19 +47,6 @@ public class CadastrarUsuarioServlet extends HttpServlet {
         insertUser(newUser);
            
             
-        try (PrintWriter out = response.getWriter()) {
-           
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Cadastro de usuário</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Usuário cadastrado com sucesso!</h1><a href=portal.jsp>Portal</a>");
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
     
     private void insertUser(Usuario user){

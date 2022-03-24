@@ -18,11 +18,11 @@ import java.util.List;
  * @author lucas
  */
 public class UsuarioDAO implements DAO<Usuario>{
-    private static final String INSERT_QUERY = "INSERT INTO usuario (nome,login,senha) values (?,?,?)";
+    private static final String INSERT_QUERY = "INSERT INTO usuario (name,login,senha) values (?,?,?)";
     private static final String FIND_ALL_QUERY = "SELECT * from usuario;";
     private static final String FIND_ONE = "SELECT * FROM usuario WHERE login = ?";
-    private static final String UPDATE = "UPDATE user SET name = ?, login = ?, senha = ? WHERE id = ?";
-    private static final String DELETE = "DELETE FROM user WHERE id = ?";
+    private static final String UPDATE = "UPDATE usuario SET name = ?, login = ?, senha = ? WHERE id = ?";
+    private static final String DELETE = "DELETE FROM usuario WHERE id = ?";
     private Connection con = null;
     
     public UsuarioDAO(Connection con) throws DAOException{
@@ -35,14 +35,15 @@ public class UsuarioDAO implements DAO<Usuario>{
 
     @Override
     public Usuario find(String login) throws DAOException {
+        System.out.println(login);
         try(PreparedStatement ps = con.prepareStatement(FIND_ONE)){
             ps.setString(1, login);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Usuario u = new Usuario();
-                u.setNome(rs.getString("nome"));
+                u.setNome(rs.getString("name"));
                 u.setLogin(rs.getString("login"));
-                u.setSenha(rs.getString("password"));
+                u.setSenha(rs.getString("senha"));
                 u.setId(rs.getInt("id"));
                
                 return u;
@@ -61,9 +62,9 @@ public class UsuarioDAO implements DAO<Usuario>{
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
                 Usuario u = new Usuario();
-                u.setNome(rs.getString("nome"));
+                u.setNome(rs.getString("name"));
                 u.setLogin(rs.getString("login"));
-                u.setSenha(rs.getString("password"));
+                u.setSenha(rs.getString("senha"));
                 u.setId(rs.getInt("id"));
                
                 list.add(u);
