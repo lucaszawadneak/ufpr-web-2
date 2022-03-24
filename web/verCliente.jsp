@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Clientes</title>
+        <title>Ver cliente</title>
         <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     </head>
@@ -23,28 +23,29 @@
                 <jsp:param name="msg" value="Usuário deve se autenticar para acessar o sistema"/>
             </jsp:forward>
         <%}%>
-        <h1><jsp:getProperty name="login" property="name"/></h1>
-        <a href="/WEB1/cliente.jsp" class="btn btn-primary">Novo cliente</a>
         <table class="table">
             <tr>
                 <th>Nome</th>
                 <th>CPF</th>
                 <th>Email</th>
-                <th>Ver</th>
-                <th>Editar</th>
-                <th>Excluir</th>
+                <th>Data</th>
+                <th>Rua</th>
+                <th>Número</th>
+                <th>Cidade</th>
+                <th>UF</th>
             </tr>
-            <c:forEach var="cliente" items="${clientes}">
-              <tr>
+             <tr>
                 <td><c:out value="${cliente.nome}" /></td>
                 <td><c:out value="${cliente.cpf}"/></td>
                 <td><c:out value="${cliente.email}"/></td>
-                <td><a href="/WEB1/ClientesServlet?action=index&id=${cliente.cpf}"  >A</a></td>
-                <td><a href="/WEB1/ClientesServlet?action=update&id=${cliente.id}" >A</a></td>
-                <td><a href="/WEB1/ClientesServlet?action=delete&id=${cliente.id}" >A</a></td>
+                <td><c:out value="${cliente.data}" /></td>
+                <td><c:out value="${cliente.rua}"/></td>
+                <td><c:out value="${cliente.nr}"/></td>
+                <td><c:out value="${cliente.cidade}" /></td>
+                <td><c:out value="${cliente.uf}"/></td>
             </tr>
-            </c:forEach> 
         </table>
+        <a class="btn btn-primary" href="/WEB1/ClientesServlet">Voltar</a>
         <footer class="text-center text-lg-start position-fixed bottom-0 w-full">
             <p>Em caso de problemas contactar o adminstrador: <%
                out.print(((ConfigBean) application.getAttribute("configuracao")).getAdminEmail());

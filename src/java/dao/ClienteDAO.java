@@ -53,6 +53,7 @@ public class ClienteDAO implements DAO<Cliente>{
                 c.setCep(rs.getString("cep"));
                 c.setCidade(rs.getString("cidade"));
                 c.setUf(rs.getString("uf"));
+                c.setId(rs.getInt("id"));
                
                 return c;
             }
@@ -78,6 +79,7 @@ public class ClienteDAO implements DAO<Cliente>{
                 c.setCep(rs.getString("cep"));
                 c.setCidade(rs.getString("cidade"));
                 c.setUf(rs.getString("uf"));
+                c.setId(rs.getInt("id"));
                 
                
                 list.add(c);
@@ -101,6 +103,8 @@ public class ClienteDAO implements DAO<Cliente>{
            ps.setString(8, c.getCidade());
            ps.setString(9, c.getUf());
            ps.executeUpdate();
+           
+           System.err.println(c.getNome());
         }
 
         catch (SQLException e){
@@ -129,9 +133,9 @@ public class ClienteDAO implements DAO<Cliente>{
     }
 
     @Override
-    public void delete(Cliente c) throws DAOException {
+    public void delete(String id) throws DAOException {
        try(PreparedStatement ps = con.prepareStatement(DELETE)){
-           ps.setInt(1, c.getId());
+           ps.setString(1, id);
            ps.executeUpdate();
         }
         catch (SQLException e){
