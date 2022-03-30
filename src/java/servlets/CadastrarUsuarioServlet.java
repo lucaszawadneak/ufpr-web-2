@@ -30,10 +30,9 @@ public class CadastrarUsuarioServlet extends HttpServlet {
         RequestDispatcher portalRD = getServletContext().getRequestDispatcher("/PortalServlet");
         
         HttpSession session = request.getSession();
-        RequestDispatcher erroRD = getServletContext().getRequestDispatcher("/erro.jsp");
+        RequestDispatcher erroRD = getServletContext().getRequestDispatcher("/index.jsp");
         if(session == null){
             request.setAttribute("msg", "Usuário não logado");
-            request.setAttribute("page", "index.html");
             erroRD.forward(request, response);
         }
     

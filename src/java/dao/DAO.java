@@ -16,5 +16,5 @@ public interface DAO<T> {
     List<T> findAll() throws DAOException;
     void insert(T t) throws DAOException;
     void update(T t) throws DAOException;
-    void delete(T t) throws DAOException;
+    void delete(String id) throws DAOException;
 }

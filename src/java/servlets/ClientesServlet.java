@@ -9,6 +9,7 @@ import connection.ConnectionFactory;
 import dao.ClienteDAO;
 import dao.UsuarioDAO;
 import exception.DAOException;
+import facades.ClientesFacade;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class ClientesServlet extends HttpServlet {
 
         RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
         
+        RequestDispatcher portalRD = getServletContext().getRequestDispatcher("/portal.jsp");
         HttpSession s = request.getSession();
 
         if(s.getAttribute("logado") == null){
@@ -54,63 +56,6 @@ public class ClientesServlet extends HttpServlet {
         String action = request.getParameter("action");
         
         if("store".equals(action)){
-            store(request,response,false);
-        } else if("update".equals(action)){
-            store(request,response,true);
-        } else if("delete".equals(action)){
-            delete(request,response);
-        } else if("index".equals(action)){
-            index(request,response);
-        } else {
-            show(request,response);
-        }
-       
-    }
-    
-    private void index(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-            String cpf = request.getParameter("cpf");
-            
-            Cliente c = null;
-        
-            try(ConnectionFactory factory = new ConnectionFactory()){
-                ClienteDAO cDAO = new ClienteDAO(factory.getConnection());
-                
-                c = cDAO.find(cpf);
-            } catch (DAOException e){
-                System.out.println("Erro ao inserir usuario");
-                e.printStackTrace();
-            } catch (Exception e){
-                System.out.println("erro");
-                e.printStackTrace();
-            }
-
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/verCliente.jsp");
-            request.setAttribute("cliente", c);
-            rd.forward(request, response);    
-    }
-    
-    
-    private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-            String userID = request.getParameter("id");
-        
-            try(ConnectionFactory factory = new ConnectionFactory()){
-                ClienteDAO cDAO = new ClienteDAO(factory.getConnection());
-                
-                cDAO.delete(userID);
-            } catch (DAOException e){
-                System.out.println("Erro ao inserir usuario");
-                e.printStackTrace();
-            } catch (Exception e){
-                System.out.println("erro");
-                e.printStackTrace();
-            }
-
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=null");
-            rd.forward(request, response);    
-    }
-    
- 
-    private void store(HttpServletRequest request, HttpServletResponse response,Boolean update) throws ServletException, IOException{
             Cliente c = new Cliente();
             
             
@@ -133,48 +78,65 @@ public class ClientesServlet extends HttpServlet {
             c.setNr(nr);
             c.setRua(rua);
             c.setUf(uf);
-        
-            try(ConnectionFactory factory = new ConnectionFactory()){
-                ClienteDAO cDAO = new ClienteDAO(factory.getConnection());
-                
-                if(update){
-                    cDAO.update(c);
-                } else {
-                    cDAO.insert(c);
-                  
-                }
-            } catch (DAOException e){
-                System.out.println("Erro ao inserir usuario");
-                e.printStackTrace();
-            } catch (Exception e){
-                System.out.println("erro");
-                e.printStackTrace();
-            }
+            
+            ClientesFacade.inserir(c);
+            
+            portalRD.forward(request, response);  
+            
+            
+        } else if("update".equals(action)){           
+            Cliente c = new Cliente();
+            
+            
+            String nome = (String) request.getAttribute("nome");
+            String email = (String) request.getAttribute("email");
+            String cpf = (String) request.getAttribute("cpf");
+            Date date = (Date) request.getAttribute("date");
+            String rua = (String) request.getAttribute("rua");
+            Integer nr = (Integer) request.getAttribute("nr");
+            String cep = (String) request.getAttribute("cep");
+            String  cidade = (String) request.getAttribute("cidade");
+            String uf = (String) request.getAttribute("uf");
+            
+            c.setNome(nome);
+            c.setCep(cep);
+            c.setCidade(cidade);
+            c.setCpf(cpf);
+            c.setData(date);
+            c.setEmail(email);
+            c.setNr(nr);
+            c.setRua(rua);
+            c.setUf(uf);
+            
+            ClientesFacade.alterar(c);
+            
+            portalRD.forward(request, response);  
+        } else if("delete".equals(action)){
+            String userID = request.getParameter("id");
+            ClientesFacade.delete(userID);
+            
+            portalRD.forward(request, response);  
+        } else if("index".equals(action)){
+            String cpf = request.getParameter("cpf");
+            
+            Cliente c = ClientesFacade.buscar(cpf);
+            
+            RequestDispatcher clienteRD = getServletContext().getRequestDispatcher("/verCliente.jsp");
+            request.setAttribute("cliente", c);
+            clienteRD.forward(request, response);   
+        } else {
+            
+            List<Cliente> cList = ClientesFacade.buscarTodos();
+            
+            
+            RequestDispatcher listarRD = getServletContext().getRequestDispatcher("/listarClientes.jsp");
 
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/ClientesServlet?action=null");
-            rd.forward(request, response);    
-    }
-    
-    private void show(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-            List<Cliente> c = null;
-
-            try(ConnectionFactory factory = new ConnectionFactory()){
-                ClienteDAO cDAO = new ClienteDAO(factory.getConnection());
-
-                c = cDAO.findAll();
-            } catch (DAOException e){
-                System.out.println("Erro ao buscar usuario");
-                e.printStackTrace();
-            } catch (Exception e){
-                System.out.println("erro");
-                e.printStackTrace();
-            }
-
-            RequestDispatcher rd = getServletContext().getRequestDispatcher("/listarClientes.jsp");
-
-            request.setAttribute("clientes", c);        
-            rd.forward(request, response);
+            request.setAttribute("clientes", cList);        
+            listarRD.forward(request, response);
         }
+       
+    }
+
         
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

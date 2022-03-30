@@ -15,7 +15,9 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     </head>
     <body>
-        <h1>${msg}</h1>
+        <h1>${pageContext.exception.message}</h1>
+        <p>${pageContext.out.flush()}</p>
+        <p>${pageContext.exception.printStackTrace(pageContext.response.writer)}
         <a href="/WEB1/${page}">Sair</a>
         <footer>
             <p>Em caso de problemas contactar o adminstrador: <%

@@ -104,9 +104,9 @@ public class UsuarioDAO implements DAO<Usuario>{
     }
 
     @Override
-    public void delete(Usuario user) throws DAOException {
+    public void delete(String id) throws DAOException {
        try(PreparedStatement ps = con.prepareStatement(DELETE)){
-           ps.setInt(1, user.getId());
+           ps.setString(1, id);
            ps.executeUpdate();
         }
         catch (SQLException e){
