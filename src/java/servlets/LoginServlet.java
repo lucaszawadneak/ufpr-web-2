@@ -56,8 +56,9 @@ public class LoginServlet extends HttpServlet {
             lb.setId(usuario.getId());
             lb.setName(usuario.getNome());
             
+            System.out.println(usuario.getNome());
+            
             s.setAttribute("logado",lb);
-            request.setAttribute("name", usuario.getNome());
             rd.forward(request,response);
         } else {
             RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.jsp");
@@ -66,26 +67,6 @@ public class LoginServlet extends HttpServlet {
             rd.forward(request, response);
         }
         
-        
-        
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Login</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            if(user.equals(password)){
-                out.println("<script>alert(\"Usuário Logado\")</script>");
-                out.println("<a href=\"PortalServlet\">Próximo</a>");
-            } else {
-                out.println("<script>alert(\"Erro ao logar\")</script>");
-                out.println("<a href=/>Voltar</a>");
-            }
-            out.println("</body>");
-            out.println("</html>");
-        }
     }
     
     private Boolean handleLogin(String email,String password){
@@ -94,7 +75,7 @@ public class LoginServlet extends HttpServlet {
             Usuario user = u.find(email);
             
             if(password.equals(user.getSenha())){
-                usuario = user;
+                this.usuario = user;
                 return true;
             }
         } catch (DAOException e){

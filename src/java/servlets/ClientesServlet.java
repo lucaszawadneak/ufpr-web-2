@@ -121,9 +121,18 @@ public class ClientesServlet extends HttpServlet {
             
             Cliente c = ClientesFacade.buscar(cpf);
             
-            RequestDispatcher clienteRD = getServletContext().getRequestDispatcher("/verCliente.jsp");
-            request.setAttribute("cliente", c);
-            clienteRD.forward(request, response);   
+            
+            String edit = request.getParameter("edit");
+            
+            if("true".equals(edit)){
+                RequestDispatcher clienteRD = getServletContext().getRequestDispatcher("/clientesForm.jsp?action=edit");
+                request.setAttribute("currentCliente", c);    
+                clienteRD.forward(request, response);   
+            } else {
+                RequestDispatcher clienteRD = getServletContext().getRequestDispatcher("/verCliente.jsp");
+                request.setAttribute("cliente", c);
+                clienteRD.forward(request, response);   
+            }
         } else {
             
             List<Cliente> cList = ClientesFacade.buscarTodos();

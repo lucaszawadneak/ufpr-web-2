@@ -25,9 +25,7 @@
         </form> 
         <strong class="text-center mt-2 text-danger">${msg}</strong>
         <footer class="text-center text-lg-start position-fixed bottom-0 w-full">
-            <p>Em caso de problemas contactar o adminstrador: <%
-               out.print(((ConfigBean) application.getAttribute("configuracao")).getAdminEmail());
-            %>
+            <p>Em caso de problemas contactar o adminstrador: ${applicationScope.configuracao.getAdminEmail()}
             </p>
         </footer>
     </body>
